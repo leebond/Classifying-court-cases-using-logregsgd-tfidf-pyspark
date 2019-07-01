@@ -1,7 +1,20 @@
-## Repository description
+# Repository description
 In this repository, I am attempting the use of pyspark to build a logistic regression model with SGD. In the second script, I will evaluate the model using the tested data.
 
-## The commands below will not run on your local machine with spark being setup.Make sure you have cloud computing resources eg. EMR or GCP to run the below jobs.
+### Business case
+We want to know if a document belongs to an Australian court case or not.
+
+### Datasets
+Full sized:
+The train data consists of 170,000 text documents of 7.6 million lines of text (1.9GB).
+The test data consists of 18.700 text documents of 1 million lines of text (200 MB).
+
+Small sized:
+The small train data is about 37.5MB.
+
+I have tested my code on the small train data to build my logistic regression model. Once my code is ready, I will upload the scripts to AWS or GCP to train on the full dataset and also test on the full test dataset.
+
+The commands below will not run on your local machine with spark being setup.Make sure you have cloud computing resources eg. EMR or GCP to run the below jobs.
 
 ### Train
 format:

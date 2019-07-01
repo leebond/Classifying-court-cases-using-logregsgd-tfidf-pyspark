@@ -1,42 +1,16 @@
-# pyspark-template
+## Repository description
+In this repository, I am attempting the use of pyspark to build a logistic regression model with SGD. In the second script, I will evaluate the model using the tested data.
 
-This is a pyspark project template
+### Train
+format:
+spark-submit <train.py> <training data> <outputdirectory>
 
+example:
+spark-submit logistic_regression_pyspark_train.py  gs://metcs777/TrainingData.txt outputdir 
 
-## Describe here your project
+### Test
+format:
+spark-submit <test.py> <test data> <trained_model_directory>
 
-
-This is a very simple HelloWorld example in pyspark. 
-
-
-
-
-# How to run  
-
-Run the task 1 by submitting the task to spark-submit. 
-
-
-```python
-
-spark-submit main_task1.py 
-
-```
-
-
-
-```python
-
-spark-submit main_task2.py 
-
-```
-
-
-
-```python
-
-spark-submit main_task3.py 
-
-```
-
-
-
+example:
+spark-submit prediction.py gs://metcs777/TestingData.txt

@@ -71,9 +71,6 @@ def best_f1(df, cutoffs):
     return F_measure, best_cutoff
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
-        print("Usage: wordcount <file> <output> ", file=sys.stderr)
-#        exit(-1)
     
     sc = SparkContext()
     sqlContext = SQLContext(sc)
@@ -81,43 +78,40 @@ if __name__ == "__main__":
     dictionary = sc.textFile(sys.argv[2], 1)
     with open('/tmp/weights.pkl','rb') as f:
         weights = pickle.load(f)[0]
-    print(weights)
+
     wordnRank = dictionary.map(lambda x: (x[x.index("'")+1: x.index(",")-1], int(x[x.index(",") + 2:][:-1] )) )
-#    print(textnRank.take(1))
+
     validLines = corpus.filter(lambda x: 'id' in x and 'url=' in x)
-#    print(validLines.take(1))   
+   
     keyAndText = validLines.map(lambda x: (x[x.index('id="')+4: x.index('" url=')], x[x.index('">') + 2:][:-6] ))
-#    print(keyAndText.take(1))
+
     regex = re.compile('[^a-zA-Z]')
     keyAndListOfWords = keyAndText.map(lambda x: (str(x[0]), regex.sub(' ', x[1]).lower().split()) ).cache() # returns (id, [word1, word2, ...])
     allWords = keyAndListOfWords.flatMap(lambda x: ((j, x[0]) for j in x[1]) ) # returns (word, Docid) for all documents
-#    print(allWords.take(1))
+
     allDictionaryWords = allWords.join(wordnRank) # left join to dictionary; returns (word, (Docid, rank))
-#    print(allDictionaryWords.take(1))
+
     justDocAndPos = allDictionaryWords.map(lambda x: (x[1][0], x[1][1])) # returns (Docid, rank) for all words
-#    print(sorted(justDocAndPos.take(1)))
+
     allDictionaryWordsInEachDoc = justDocAndPos.groupByKey().mapValues(list) # returns (Docid, [rank, rank, ... for all words in document])
-#    print(allDictionaryWordsInEachDoc.take(1))
+
     features = allDictionaryWordsInEachDoc.map(lambda x: (x[0], buildArray(x[1]) ) ).cache()
-    print(features)
+
     scores = features.map(lambda x: (x[0], computeTheta(x[1], weights)))
-#        print(scores.take(1))
+
     prediction = scores.map(lambda x: (x[0], sigmoid(x[1])))
-#    print(prediction.take(1))
+
 
     prediction_df = prediction.map(lambda x: Row(label=float(1.0 if x[0][:2] == 'AU' else 0.0), pred=float(x[1])))
     df = sqlContext.createDataFrame(prediction_df).cache()
-    print(df.show())
-#    cutoffs = np.arange(0,1,0.05)
+#    print(df.show())
     cutoff = 0.3
     F_measure = f1(df, cutoff)
 #    print("Cutoff %f gives highest F1 score %f" %(best_cutoff, F_measure))
     print("Cutoff %f gives F1 score of %f" %(cutoff, F_measure))
+
     # save best F1 score for assignment
-#    myOutput = sc.parallelize([F_measure, best_cutoff], 1)
     myOutput = sc.parallelize([F_measure, cutoff], 1)
     myOutput.saveAsTextFile(sys.argv[3])
-    
-    # look at false positives
-    
+
     sc.stop()

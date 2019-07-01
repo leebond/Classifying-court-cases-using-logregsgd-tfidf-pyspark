@@ -1,6 +1,8 @@
 ## Repository description
 In this repository, I am attempting the use of pyspark to build a logistic regression model with SGD. In the second script, I will evaluate the model using the tested data.
 
+## The commands below will not run on your local machine with spark being setup.Make sure you have cloud computing resources eg. EMR or GCP to run the below jobs.
+
 ### Train
 format:
 spark-submit <train.py> <training data> <outputdirectory>

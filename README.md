@@ -14,6 +14,19 @@ The small train data is about 37.5MB.
 
 I have tested my code on the small train data to build my logistic regression model. Once my code is ready, I will upload the scripts to AWS or GCP to train on the full dataset and also test on the full test dataset.
 
+
+For GCP:
+Full sized training data is located at gs://metcs777/TrainingData.txt
+Full sized testing data is located at gs://metcs777/TestingData.txt
+Small sized training data is located at gs://metcs777/SmallTrainingData.txt
+
+For AWS:
+Full sized training data is located at s3://metcs777/TrainingData.txt
+Full sized testing data is located at s3://metcs777/TestingData.txt
+Small sized training data is located at s3://metcs777/SmallTrainingData.txt
+
+
+## Local Commands
 The commands below will not run on your local machine with spark being setup.Make sure you have cloud computing resources eg. EMR or GCP to run the below jobs.
 
 ### Train
